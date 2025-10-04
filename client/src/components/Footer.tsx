@@ -126,6 +126,9 @@ export default function Footer() {
               </button>
             </div>
           </div>
+          <p className="font-sans text-primary-foreground/60 text-xs sm:text-sm text-center mt-4">
+            In partnership with Mentoria for enhanced career guidance services.
+          </p>
         </div>
       </div>
     </footer>
