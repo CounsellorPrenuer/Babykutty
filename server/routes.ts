@@ -59,9 +59,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       await storage.createLead({
-        name: name || "Guest",
-        email: email || "no-email@provided.com",
-        phone: phone || null,
+        name: (name && name.trim()) || "Guest",
+        email: (email && email.trim()) || "no-email@provided.com",
+        phone: (phone && phone.trim()) || null,
         source: "payment",
         planName,
         amount,
