@@ -2,6 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Check, X, Star, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface Feature {
   text: string;
@@ -163,6 +166,7 @@ const categories: Category[] = [
 export default function Packages() {
   const [activeTab, setActiveTab] = useState("8-9");
   const [visibleCards, setVisibleCards] = useState<boolean[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     setVisibleCards([]);
@@ -174,33 +178,69 @@ export default function Packages() {
 
   const activeCategory = categories.find((cat) => cat.id === activeTab) || categories[0];
 
+  const createOrderMutation = useMutation({
+    mutationFn: async ({ planName, amount }: { planName: string; amount: number }) => {
+      const res = await apiRequest("POST", "/api/create-order", { planName, amount });
+      return await res.json();
+    },
+    onSuccess: (data: any, variables) => {
+      if (typeof window.Razorpay !== "undefined") {
+        const options = {
+          key: data.key,
+          amount: variables.amount * 100,
+          currency: "INR",
+          name: "Career Compass",
+          description: variables.planName,
+          order_id: data.orderId,
+          handler: async function (response: any) {
+            try {
+              await apiRequest("POST", "/api/verify-payment", {
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpaySignature: response.razorpay_signature,
+                paymentId: data.paymentId,
+              });
+              toast({
+                title: "Payment Successful!",
+                description: "We'll contact you shortly to begin your career guidance journey.",
+              });
+            } catch (error) {
+              toast({
+                title: "Payment Verification Failed",
+                description: "Please contact us with your payment details.",
+                variant: "destructive",
+              });
+            }
+          },
+          prefill: {
+            email: "babykutty67@gmail.com",
+          },
+          theme: {
+            color: "#D4AF37",
+          },
+        };
+        
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      } else {
+        toast({
+          title: "Payment Gateway Loading",
+          description: "Please wait a moment and try again.",
+          variant: "destructive",
+        });
+      }
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to initiate payment. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handlePayment = (planName: string, amount: number) => {
-    console.log(`Payment initiated for ${planName}: ₹${amount}`);
-    
-    if (typeof window.Razorpay !== "undefined") {
-      const options = {
-        key: "YOUR_RAZORPAY_KEY_ID",
-        amount: amount * 100,
-        currency: "INR",
-        name: "Career Compass",
-        description: planName,
-        handler: function (response: any) {
-          console.log("Payment successful:", response);
-          alert("Payment successful! We'll contact you shortly.");
-        },
-        prefill: {
-          email: "babykutty67@gmail.com",
-        },
-        theme: {
-          color: "#D4AF37",
-        },
-      };
-      
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } else {
-      alert(`Payment gateway loading... Package: ${planName}, Amount: ₹${amount}`);
-    }
+    createOrderMutation.mutate({ planName, amount });
   };
 
   return (

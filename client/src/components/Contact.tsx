@@ -5,6 +5,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, CheckCircle2, Users, Building2, GraduationCap, PlayCircle, ExternalLink } from "lucide-react";
 import { SiFacebook } from "react-icons/si";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -14,15 +17,35 @@ export default function Contact() {
     message: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { toast } = useToast();
+
+  const contactMutation = useMutation({
+    mutationFn: async (data: typeof formData) => {
+      return await apiRequest("POST", "/api/contact", data);
+    },
+    onSuccess: () => {
+      setIsSubmitted(true);
+      toast({
+        title: "Message sent!",
+        description: "We'll get back to you shortly.",
+      });
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      }, 3000);
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({ name: "", email: "", phone: "", message: "" });
-    }, 3000);
+    contactMutation.mutate(formData);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -132,10 +155,11 @@ export default function Contact() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-accent to-yellow-400 text-accent-foreground hover:scale-105 hover:shadow-xl hover:shadow-accent/30 transition-all duration-300 rounded-full min-h-12 sm:min-h-14 text-base sm:text-lg font-semibold"
+                  disabled={contactMutation.isPending}
+                  className="w-full bg-gradient-to-r from-accent to-yellow-400 text-accent-foreground hover:scale-105 hover:shadow-xl hover:shadow-accent/30 transition-all duration-300 rounded-full min-h-12 sm:min-h-14 text-base sm:text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                   data-testid="button-submit"
                 >
-                  Send Message
+                  {contactMutation.isPending ? "Sending..." : "Send Message"}
                 </Button>
               </form>
             )}

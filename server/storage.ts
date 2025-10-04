@@ -1,38 +1,36 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
+import { db } from "../db/index";
+import { contacts, payments, type Contact, type InsertContact, type Payment, type InsertPayment } from "@shared/schema";
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  createContact(contact: InsertContact): Promise<Contact>;
+  createPayment(payment: InsertPayment): Promise<Payment>;
+  updatePayment(id: string, razorpayPaymentId: string, razorpayOrderId: string): Promise<Payment | undefined>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-
-  constructor() {
-    this.users = new Map();
+export class DbStorage implements IStorage {
+  async createContact(insertContact: InsertContact): Promise<Contact> {
+    const [contact] = await db.insert(contacts).values(insertContact).returning();
+    return contact;
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+  async createPayment(insertPayment: InsertPayment): Promise<Payment> {
+    const [payment] = await db.insert(payments).values(insertPayment).returning();
+    return payment;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+  async updatePayment(id: string, razorpayPaymentId: string, razorpayOrderId: string): Promise<Payment | undefined> {
+    const { eq } = await import("drizzle-orm");
+    const [payment] = await db
+      .update(payments)
+      .set({ 
+        razorpayPaymentId, 
+        razorpayOrderId,
+        status: "completed"
+      })
+      .where(eq(payments.id, id))
+      .returning();
+    return payment;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DbStorage();
