@@ -22,7 +22,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/create-order", async (req, res) => {
     try {
-      const { amount, planName } = req.body;
+      const { amount, planName, name, email, phone } = req.body;
       
       const options = {
         amount: amount * 100,
@@ -36,6 +36,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         razorpayOrderId: order.id,
         planName,
         amount,
+        name,
+        email,
+        phone,
         status: "pending",
       });
 

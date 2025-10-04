@@ -5,6 +5,15 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface Feature {
   text: string;
@@ -166,6 +175,13 @@ const categories: Category[] = [
 export default function Packages() {
   const [activeTab, setActiveTab] = useState("8-9");
   const [visibleCards, setVisibleCards] = useState<boolean[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<{ planName: string; amount: number } | null>(null);
+  const [userDetails, setUserDetails] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -179,8 +195,8 @@ export default function Packages() {
   const activeCategory = categories.find((cat) => cat.id === activeTab) || categories[0];
 
   const createOrderMutation = useMutation({
-    mutationFn: async ({ planName, amount }: { planName: string; amount: number }) => {
-      const res = await apiRequest("POST", "/api/create-order", { planName, amount });
+    mutationFn: async ({ planName, amount, name, email, phone }: { planName: string; amount: number; name: string; email: string; phone: string }) => {
+      const res = await apiRequest("POST", "/api/create-order", { planName, amount, name, email, phone });
       return await res.json();
     },
     onSuccess: (data: any, variables) => {
@@ -213,7 +229,9 @@ export default function Packages() {
             }
           },
           prefill: {
-            email: "babykutty67@gmail.com",
+            name: variables.name,
+            email: variables.email,
+            contact: variables.phone,
           },
           theme: {
             color: "#D4AF37",
@@ -240,7 +258,32 @@ export default function Packages() {
   });
 
   const handlePayment = (planName: string, amount: number) => {
-    createOrderMutation.mutate({ planName, amount });
+    setSelectedPlan({ planName, amount });
+    setIsModalOpen(true);
+  };
+
+  const handleModalSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!userDetails.name || !userDetails.email || !userDetails.phone) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (selectedPlan) {
+      setIsModalOpen(false);
+      createOrderMutation.mutate({
+        planName: selectedPlan.planName,
+        amount: selectedPlan.amount,
+        name: userDetails.name,
+        email: userDetails.email,
+        phone: userDetails.phone,
+      });
+    }
   };
 
   return (
@@ -378,6 +421,76 @@ export default function Packages() {
           ))}
         </div>
       </div>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-2xl">Enter Your Details</DialogTitle>
+            <DialogDescription className="font-sans">
+              Please provide your information to proceed with the payment for {selectedPlan?.planName}.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleModalSubmit} className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="font-sans">Full Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                value={userDetails.name}
+                onChange={(e) => setUserDetails({ ...userDetails, name: e.target.value })}
+                required
+                data-testid="input-user-name"
+                className="font-sans"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="font-sans">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="john@example.com"
+                value={userDetails.email}
+                onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
+                required
+                data-testid="input-user-email"
+                className="font-sans"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="font-sans">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+91 98765 43210"
+                value={userDetails.phone}
+                onChange={(e) => setUserDetails({ ...userDetails, phone: e.target.value })}
+                required
+                data-testid="input-user-phone"
+                className="font-sans"
+              />
+            </div>
+            <div className="flex gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsModalOpen(false)}
+                className="flex-1 font-sans"
+                data-testid="button-cancel-payment"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="flex-1 bg-gradient-to-r from-accent to-yellow-400 text-accent-foreground font-sans"
+                data-testid="button-proceed-payment"
+              >
+                Proceed to Payment
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

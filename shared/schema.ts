@@ -26,6 +26,7 @@ export const payments = pgTable("payments", {
   razorpayOrderId: text("razorpay_order_id"),
   planName: text("plan_name").notNull(),
   amount: integer("amount").notNull(),
+  name: text("name"),
   email: text("email"),
   phone: text("phone"),
   status: text("status").notNull(),
