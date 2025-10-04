@@ -1,37 +1,21 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Calendar, ArrowRight, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const blogPosts = [
-  {
-    category: "Career Tips",
-    title: "5 Signs It's Time for a Career Change",
-    excerpt: "Discover the key indicators that suggest it might be time to explore new professional horizons and make a meaningful transition.",
-    date: "March 15, 2024",
-    readTime: "5 min read",
-    gradient: "from-blue-500 to-purple-600",
-  },
-  {
-    category: "Student Guide",
-    title: "Choosing the Right Educational Path",
-    excerpt: "A comprehensive guide for students to evaluate their interests, strengths, and career goals when selecting their academic journey.",
-    date: "March 10, 2024",
-    readTime: "7 min read",
-    gradient: "from-green-500 to-teal-600",
-  },
-  {
-    category: "Professional Growth",
-    title: "Navigating Mid-Career Challenges",
-    excerpt: "Expert strategies for overcoming common obstacles professionals face in their mid-career and achieving breakthrough success.",
-    date: "March 5, 2024",
-    readTime: "6 min read",
-    gradient: "from-orange-500 to-red-600",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
+import type { Blog as BlogType } from "@shared/schema";
 
 export default function Blog() {
+  const [, navigate] = useLocation();
   const [visibleCards, setVisibleCards] = useState<boolean[]>([]);
+
+  const { data, isLoading } = useQuery<{ success: boolean; blogs: BlogType[] }>({
+    queryKey: ["/api/blogs/featured"],
+  });
+
+  const blogPosts = data?.blogs || [];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -57,10 +41,10 @@ export default function Blog() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [blogPosts.length]);
 
-  const handleReadMore = (title: string) => {
-    console.log(`Reading blog post: ${title}`);
+  const handleReadMore = (blogId: string) => {
+    navigate(`/blog/${blogId}`);
   };
 
   return (
@@ -137,7 +121,7 @@ export default function Blog() {
                     <span className="text-accent">{post.readTime}</span>
                   </div>
                   <button
-                    onClick={() => handleReadMore(post.title)}
+                    onClick={() => handleReadMore(post.id)}
                     className="flex items-center gap-2 text-accent hover:gap-3 transition-all font-semibold text-sm group/btn"
                     data-testid={`button-blog-read-${index}`}
                   >
@@ -149,6 +133,21 @@ export default function Blog() {
             </div>
           ))}
         </div>
+
+        {!isLoading && blogPosts.length > 0 && (
+          <div className="text-center mt-12">
+            <Button
+              onClick={() => navigate("/blogs")}
+              size="lg"
+              variant="outline"
+              className="hover:bg-accent hover:text-accent-foreground"
+              data-testid="button-view-all-blogs"
+            >
+              <BookOpen className="w-5 h-5 mr-2" />
+              View All Blog Posts
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );
