@@ -1,5 +1,6 @@
 import logoImage from "@assets/logo_1759556754448.png";
 import { SiFacebook } from "react-icons/si";
+import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -24,31 +25,40 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-primary text-primary-foreground">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          <div>
+    <footer className="bg-gradient-to-b from-primary to-[#00152a] text-primary-foreground relative overflow-hidden">
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-accent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-accent rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 relative z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-12">
+          <div className="sm:col-span-2 lg:col-span-1">
             <img
               src={logoImage}
               alt="Career Compass"
-              className="h-16 w-auto mb-4"
+              className="h-14 sm:h-16 w-auto mb-4 sm:mb-6 hover:scale-105 transition-transform"
               data-testid="img-footer-logo"
             />
-            <p className="font-sans text-primary-foreground/80 text-sm leading-relaxed">
+            <p className="font-serif text-base sm:text-lg text-accent italic mb-4 sm:mb-6">
               Navigating Your Path to Professional Success
+            </p>
+            <p className="font-sans text-sm sm:text-base text-primary-foreground/80 leading-relaxed">
+              Expert career guidance for students, graduates, and professionals.
             </p>
           </div>
 
           <div>
-            <h3 className="font-serif font-bold text-lg mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+            <h3 className="font-serif font-bold text-lg sm:text-xl mb-4 sm:mb-6 text-accent">Quick Links</h3>
+            <ul className="space-y-2 sm:space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <button
                     onClick={() => handleNavClick(link.href)}
-                    className="font-sans text-primary-foreground/80 hover:text-accent transition-colors text-sm"
+                    className="font-sans text-sm sm:text-base text-primary-foreground/80 hover:text-accent hover:translate-x-2 transition-all inline-flex items-center gap-2 group"
                     data-testid={`link-footer-${link.name.toLowerCase()}`}
                   >
+                    <span className="w-0 h-0.5 bg-accent group-hover:w-4 transition-all"></span>
                     {link.name}
                   </button>
                 </li>
@@ -57,10 +67,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-serif font-bold text-lg mb-4">Services</h3>
-            <ul className="space-y-2">
+            <h3 className="font-serif font-bold text-lg sm:text-xl mb-4 sm:mb-6 text-accent">Services</h3>
+            <ul className="space-y-2 sm:space-y-3">
               {services.map((service) => (
-                <li key={service} className="font-sans text-primary-foreground/80 text-sm">
+                <li key={service} className="font-sans text-sm sm:text-base text-primary-foreground/80 flex items-start gap-2">
+                  <span className="text-accent mt-1">•</span>
                   {service}
                 </li>
               ))}
@@ -68,35 +79,53 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-serif font-bold text-lg mb-4">Connect</h3>
-            <div className="flex gap-4">
-              <a
-                href="#"
-                className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-all duration-300"
-                data-testid="link-footer-facebook"
-              >
-                <SiFacebook className="w-5 h-5" />
-              </a>
-            </div>
-            <div className="mt-6">
-              <p className="font-sans text-primary-foreground/80 text-sm mb-2">
-                <a href="mailto:babykutty67@gmail.com" className="hover:text-accent transition-colors">
+            <h3 className="font-serif font-bold text-lg sm:text-xl mb-4 sm:mb-6 text-accent">Connect With Us</h3>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3 group">
+                <Mail className="w-5 h-5 text-accent flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                <a
+                  href="mailto:babykutty67@gmail.com"
+                  className="font-sans text-sm sm:text-base text-primary-foreground/80 hover:text-accent transition-colors break-all"
+                >
                   babykutty67@gmail.com
                 </a>
-              </p>
-              <p className="font-sans text-primary-foreground/80 text-sm">
-                <a href="tel:+919995178849" className="hover:text-accent transition-colors">
+              </div>
+              <div className="flex items-start gap-3 group">
+                <Phone className="w-5 h-5 text-accent flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                <a
+                  href="tel:+919995178849"
+                  className="font-sans text-sm sm:text-base text-primary-foreground/80 hover:text-accent transition-colors"
+                >
                   +91 99951 78849
                 </a>
-              </p>
+              </div>
+              <div className="pt-2">
+                <a
+                  href="#"
+                  className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-primary-foreground/10 hover:bg-accent rounded-full hover:text-accent-foreground transition-all duration-300 hover:scale-110 shadow-lg"
+                  data-testid="link-footer-facebook"
+                >
+                  <SiFacebook className="w-5 h-5 sm:w-6 sm:h-6" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-accent/30 pt-8 text-center">
-          <p className="font-sans text-primary-foreground/60 text-sm" data-testid="text-copyright">
-            © {currentYear} Career Compass. All rights reserved.
-          </p>
+        <div className="border-t border-accent/30 pt-6 sm:pt-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="font-sans text-primary-foreground/60 text-xs sm:text-sm text-center sm:text-left" data-testid="text-copyright">
+              © {currentYear} Career Compass. All rights reserved.
+            </p>
+            <div className="flex items-center gap-6 text-xs sm:text-sm">
+              <button className="text-primary-foreground/60 hover:text-accent transition-colors">
+                Privacy Policy
+              </button>
+              <button className="text-primary-foreground/60 hover:text-accent transition-colors">
+                Terms of Service
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

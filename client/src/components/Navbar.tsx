@@ -40,31 +40,31 @@ export default function Navbar({ onNavigate }: NavbarProps) {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/95 backdrop-blur-md shadow-md"
+          ? "bg-background/98 backdrop-blur-xl shadow-lg border-b border-border"
           : "bg-background/80 backdrop-blur-md"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div className="flex items-center justify-between h-20">
-          <div className="flex-shrink-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20">
+          <div className="flex-shrink-0 group cursor-pointer" onClick={() => handleNavClick("#")}>
             <img
               src={logoImage}
               alt="Career Compass"
-              className="h-12 w-auto"
+              className="h-10 sm:h-12 w-auto group-hover:scale-105 transition-transform"
               data-testid="img-logo"
             />
           </div>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6 lg:gap-8">
             {navLinks.map((link) => (
               <button
                 key={link.name}
                 onClick={() => handleNavClick(link.href)}
-                className="text-foreground hover:text-accent font-sans font-medium transition-colors duration-200 relative group"
+                className="text-foreground hover:text-accent font-sans font-medium transition-all duration-200 relative group text-sm lg:text-base"
                 data-testid={`link-${link.name.toLowerCase()}`}
               >
                 {link.name}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-accent to-yellow-400 transition-all duration-300 group-hover:w-full rounded-full"></span>
               </button>
             ))}
           </div>
@@ -72,7 +72,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
           <div className="hidden md:block">
             <Button
               onClick={() => handleNavClick("#contact")}
-              className="bg-accent text-accent-foreground hover:scale-105 transition-transform duration-300 rounded-full px-6"
+              className="bg-gradient-to-r from-accent to-yellow-400 text-accent-foreground hover:scale-105 hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 rounded-full px-4 lg:px-6 font-semibold text-sm lg:text-base"
               data-testid="button-find-direction"
             >
               Find Your Direction
@@ -80,12 +80,12 @@ export default function Navbar({ onNavigate }: NavbarProps) {
           </div>
 
           <button
-            className="md:hidden"
+            className="md:hidden p-2 hover:bg-accent/10 rounded-lg transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             data-testid="button-menu-toggle"
           >
             <svg
-              className="w-6 h-6"
+              className="w-6 h-6 text-foreground"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -111,13 +111,13 @@ export default function Navbar({ onNavigate }: NavbarProps) {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-background border-t border-border">
-          <div className="px-6 py-4 space-y-3">
+        <div className="md:hidden bg-background/98 backdrop-blur-xl border-t border-border shadow-lg animate-slide-down">
+          <div className="px-4 sm:px-6 py-4 space-y-3">
             {navLinks.map((link) => (
               <button
                 key={link.name}
                 onClick={() => handleNavClick(link.href)}
-                className="block w-full text-left text-foreground hover:text-accent font-sans font-medium transition-colors"
+                className="block w-full text-left text-foreground hover:text-accent hover:bg-accent/5 font-sans font-medium transition-all py-2 px-4 rounded-lg"
                 data-testid={`link-mobile-${link.name.toLowerCase()}`}
               >
                 {link.name}
@@ -125,7 +125,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
             ))}
             <Button
               onClick={() => handleNavClick("#contact")}
-              className="w-full bg-accent text-accent-foreground rounded-full"
+              className="w-full bg-gradient-to-r from-accent to-yellow-400 text-accent-foreground rounded-full shadow-lg mt-2"
               data-testid="button-mobile-find-direction"
             >
               Find Your Direction
@@ -133,6 +133,22 @@ export default function Navbar({ onNavigate }: NavbarProps) {
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes slide-down {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-slide-down {
+          animation: slide-down 0.3s ease-out;
+        }
+      `}</style>
     </nav>
   );
 }
