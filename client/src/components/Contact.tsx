@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, CheckCircle2 } from "lucide-react";
+import { Mail, Phone, CheckCircle2, Users, Building2, GraduationCap, PlayCircle, ExternalLink } from "lucide-react";
 import { SiFacebook } from "react-icons/si";
 
 export default function Contact() {
@@ -194,6 +194,77 @@ export default function Contact() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-16 sm:mt-20 md:mt-24">
+          <div className="backdrop-blur-xl bg-card/50 border-2 border-card-border rounded-3xl p-8 sm:p-12 md:p-16 shadow-2xl">
+            <div className="text-center mb-10 sm:mb-12">
+              <h3 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-foreground mb-4 sm:mb-6">
+                Powered by Mentoria's<br />
+                <span className="bg-gradient-to-r from-accent to-yellow-400 bg-clip-text text-transparent">
+                  Career Discovery Platform
+                </span>
+              </h3>
+              <p className="font-sans text-sm sm:text-base md:text-lg text-muted-foreground max-w-4xl mx-auto px-4">
+                Every Leadcrest Consulting plan includes lifetime access to Mentoria: India's most trusted platform for career discovery, mentorship, and lifelong upskilling.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10 sm:mb-12">
+              <div className="backdrop-blur-sm bg-background/50 rounded-2xl p-6 sm:p-8 border border-card-border hover:border-accent/50 hover:-translate-y-2 transition-all duration-300 group" data-testid="stat-students">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Users className="w-7 h-7 sm:w-8 sm:h-8 text-blue-500" />
+                </div>
+                <div className="font-serif font-bold text-3xl sm:text-4xl text-foreground mb-2 text-center">3,50,000+</div>
+                <div className="font-sans text-xs sm:text-sm text-muted-foreground text-center">Students and Professionals Mentored</div>
+              </div>
+
+              <div className="backdrop-blur-sm bg-background/50 rounded-2xl p-6 sm:p-8 border border-card-border hover:border-accent/50 hover:-translate-y-2 transition-all duration-300 group" data-testid="stat-corporate">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Building2 className="w-7 h-7 sm:w-8 sm:h-8 text-purple-500" />
+                </div>
+                <div className="font-serif font-bold text-3xl sm:text-4xl text-foreground mb-2 text-center">240+</div>
+                <div className="font-sans text-xs sm:text-sm text-muted-foreground text-center">Corporate Partners</div>
+              </div>
+
+              <div className="backdrop-blur-sm bg-background/50 rounded-2xl p-6 sm:p-8 border border-card-border hover:border-accent/50 hover:-translate-y-2 transition-all duration-300 group" data-testid="stat-schools">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <GraduationCap className="w-7 h-7 sm:w-8 sm:h-8 text-green-500" />
+                </div>
+                <div className="font-serif font-bold text-3xl sm:text-4xl text-foreground mb-2 text-center">350+</div>
+                <div className="font-sans text-xs sm:text-sm text-muted-foreground text-center">Schools and College Partners</div>
+              </div>
+
+              <div className="backdrop-blur-sm bg-background/50 rounded-2xl p-6 sm:p-8 border border-card-border hover:border-accent/50 hover:-translate-y-2 transition-all duration-300 group" data-testid="stat-webinars">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-orange-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <PlayCircle className="w-7 h-7 sm:w-8 sm:h-8 text-orange-500" />
+                </div>
+                <div className="font-serif font-bold text-3xl sm:text-4xl text-foreground mb-2 text-center">1000+</div>
+                <div className="font-sans text-xs sm:text-sm text-muted-foreground text-center">Hours of Career Webinars</div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-background/80 backdrop-blur-sm border-2 border-card-border rounded-2xl px-6 sm:px-8 py-4 sm:py-6 hover:border-accent/50 transition-all group">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="font-serif font-bold text-2xl sm:text-3xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                    MENTORIA
+                  </div>
+                  <a 
+                    href="#" 
+                    className="flex items-center gap-2 text-accent hover:text-accent/80 transition-colors font-sans font-semibold text-sm sm:text-base"
+                    data-testid="link-mentoria"
+                  >
+                    Career Discovery Platform
+                    <ExternalLink className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  </a>
+                </div>
+              </div>
+              <p className="mt-4 font-sans text-xs sm:text-sm text-muted-foreground">
+                Click to explore Mentoria's comprehensive career platform
+              </p>
             </div>
           </div>
         </div>
