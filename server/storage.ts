@@ -1,5 +1,5 @@
 import { db } from "../db/index";
-import { contacts, payments, leads, type Contact, type InsertContact, type Payment, type InsertPayment, type Lead, type InsertLead } from "@shared/schema";
+import { contacts, payments, leads, blogs, type Contact, type InsertContact, type Payment, type InsertPayment, type Lead, type InsertLead, type Blog, type InsertBlog } from "@shared/schema";
 
 export interface IStorage {
   createContact(contact: InsertContact): Promise<Contact>;
@@ -20,6 +20,13 @@ export interface IStorage {
     revenue: number;
     investments: number;
   }>;
+  createBlog(blog: InsertBlog): Promise<Blog>;
+  getBlogs(): Promise<Blog[]>;
+  getFeaturedBlogs(): Promise<Blog[]>;
+  getBlogById(id: string): Promise<Blog | undefined>;
+  updateBlog(id: string, blog: Partial<InsertBlog>): Promise<Blog | undefined>;
+  deleteBlog(id: string): Promise<void>;
+  toggleBlogFeature(id: string, featured: number): Promise<Blog | undefined>;
 }
 
 export class DbStorage implements IStorage {
@@ -107,6 +114,44 @@ export class DbStorage implements IStorage {
       revenue,
       investments,
     };
+  }
+
+  async createBlog(insertBlog: InsertBlog): Promise<Blog> {
+    const [blog] = await db.insert(blogs).values(insertBlog).returning();
+    return blog;
+  }
+
+  async getBlogs(): Promise<Blog[]> {
+    const { desc } = await import("drizzle-orm");
+    return db.select().from(blogs).orderBy(desc(blogs.createdAt));
+  }
+
+  async getFeaturedBlogs(): Promise<Blog[]> {
+    const { desc, eq } = await import("drizzle-orm");
+    return db.select().from(blogs).where(eq(blogs.featured, 1)).orderBy(desc(blogs.createdAt)).limit(3);
+  }
+
+  async getBlogById(id: string): Promise<Blog | undefined> {
+    const { eq } = await import("drizzle-orm");
+    const [blog] = await db.select().from(blogs).where(eq(blogs.id, id));
+    return blog;
+  }
+
+  async updateBlog(id: string, blogUpdate: Partial<InsertBlog>): Promise<Blog | undefined> {
+    const { eq } = await import("drizzle-orm");
+    const [blog] = await db.update(blogs).set(blogUpdate).where(eq(blogs.id, id)).returning();
+    return blog;
+  }
+
+  async deleteBlog(id: string): Promise<void> {
+    const { eq } = await import("drizzle-orm");
+    await db.delete(blogs).where(eq(blogs.id, id));
+  }
+
+  async toggleBlogFeature(id: string, featured: number): Promise<Blog | undefined> {
+    const { eq } = await import("drizzle-orm");
+    const [blog] = await db.update(blogs).set({ featured }).where(eq(blogs.id, id)).returning();
+    return blog;
   }
 }
 

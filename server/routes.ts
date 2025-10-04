@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactSchema, insertPaymentSchema } from "@shared/schema";
+import { insertContactSchema, insertPaymentSchema, insertBlogSchema } from "@shared/schema";
 import Razorpay from "razorpay";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -136,6 +136,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const payments = await storage.getPayments();
       res.json({ success: true, payments });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.get("/api/blogs", async (req, res) => {
+    try {
+      const blogs = await storage.getBlogs();
+      res.json({ success: true, blogs });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.get("/api/blogs/featured", async (req, res) => {
+    try {
+      const blogs = await storage.getFeaturedBlogs();
+      res.json({ success: true, blogs });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.get("/api/blogs/:id", async (req, res) => {
+    try {
+      const blog = await storage.getBlogById(req.params.id);
+      if (!blog) {
+        return res.status(404).json({ success: false, error: "Blog not found" });
+      }
+      res.json({ success: true, blog });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.post("/api/blogs", async (req, res) => {
+    try {
+      const blogData = insertBlogSchema.parse(req.body);
+      const blog = await storage.createBlog(blogData);
+      res.json({ success: true, blog });
+    } catch (error: any) {
+      res.status(400).json({ success: false, error: error.message });
+    }
+  });
+
+  app.put("/api/blogs/:id", async (req, res) => {
+    try {
+      const blogData = insertBlogSchema.partial().parse(req.body);
+      const blog = await storage.updateBlog(req.params.id, blogData);
+      if (!blog) {
+        return res.status(404).json({ success: false, error: "Blog not found" });
+      }
+      res.json({ success: true, blog });
+    } catch (error: any) {
+      res.status(400).json({ success: false, error: error.message });
+    }
+  });
+
+  app.delete("/api/blogs/:id", async (req, res) => {
+    try {
+      await storage.deleteBlog(req.params.id);
+      res.json({ success: true, message: "Blog deleted successfully" });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.patch("/api/blogs/:id/feature", async (req, res) => {
+    try {
+      const { featured } = req.body;
+      const blog = await storage.toggleBlogFeature(req.params.id, featured);
+      if (!blog) {
+        return res.status(404).json({ success: false, error: "Blog not found" });
+      }
+      res.json({ success: true, blog });
     } catch (error: any) {
       res.status(500).json({ success: false, error: error.message });
     }
