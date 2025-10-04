@@ -253,7 +253,9 @@ export default function Contact() {
                     MENTORIA
                   </div>
                   <a 
-                    href="#" 
+                    href="https://mentoria.com" 
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-2 text-accent hover:text-accent/80 transition-colors font-sans font-semibold text-sm sm:text-base"
                     data-testid="link-mentoria"
                   >
