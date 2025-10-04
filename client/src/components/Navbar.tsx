@@ -10,12 +10,35 @@ export default function Navbar({ onNavigate }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isInHero, setIsInHero] = useState(true);
+  const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
       setIsInHero(window.scrollY < window.innerHeight - 100);
+
+      const sections = ["about", "services", "blog", "contact"];
+      const scrollPosition = window.scrollY + 200;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const offsetTop = element.offsetTop;
+          const offsetBottom = offsetTop + element.offsetHeight;
+
+          if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+
+      if (window.scrollY < window.innerHeight / 2) {
+        setActiveSection("");
+      }
     };
+
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -43,7 +66,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background/98 backdrop-blur-xl shadow-lg border-b border-border"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+        <div className="flex items-center h-16 sm:h-20">
           <div className="flex-shrink-0 group cursor-pointer" onClick={() => handleNavClick("#")}>
             <img
               src={logoImage}
@@ -53,18 +76,24 @@ export default function Navbar({ onNavigate }: NavbarProps) {
             />
           </div>
 
-          <div className="hidden md:flex items-center gap-6 lg:gap-8">
-            {navLinks.map((link) => (
-              <button
-                key={link.name}
-                onClick={() => handleNavClick(link.href)}
-                className={`${isInHero ? 'text-white' : 'text-foreground'} hover:text-accent font-sans font-medium transition-all duration-200 relative group text-sm lg:text-base`}
-                data-testid={`link-${link.name.toLowerCase()}`}
-              >
-                {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-accent to-yellow-400 transition-all duration-300 group-hover:w-full rounded-full"></span>
-              </button>
-            ))}
+          <div className="flex-1 flex justify-center">
+            <div className="hidden md:flex items-center gap-6 lg:gap-8">
+              {navLinks.map((link) => {
+                const sectionId = link.href.substring(1);
+                const isActive = activeSection === sectionId;
+                return (
+                  <button
+                    key={link.name}
+                    onClick={() => handleNavClick(link.href)}
+                    className={`${isInHero ? 'text-white' : 'text-foreground'} ${isActive ? 'text-accent' : ''} hover:text-accent font-sans font-medium transition-all duration-200 relative group text-sm lg:text-base`}
+                    data-testid={`link-${link.name.toLowerCase()}`}
+                  >
+                    {link.name}
+                    <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-accent to-yellow-400 transition-all duration-300 rounded-full ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <div className="hidden md:block">
@@ -111,16 +140,20 @@ export default function Navbar({ onNavigate }: NavbarProps) {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-background/98 backdrop-blur-xl border-t border-border shadow-lg animate-slide-down">
           <div className="px-4 sm:px-6 py-4 space-y-3">
-            {navLinks.map((link) => (
-              <button
-                key={link.name}
-                onClick={() => handleNavClick(link.href)}
-                className="block w-full text-left text-foreground hover:text-accent hover:bg-accent/5 font-sans font-medium transition-all py-2 px-4 rounded-lg"
-                data-testid={`link-mobile-${link.name.toLowerCase()}`}
-              >
-                {link.name}
-              </button>
-            ))}
+            {navLinks.map((link) => {
+              const sectionId = link.href.substring(1);
+              const isActive = activeSection === sectionId;
+              return (
+                <button
+                  key={link.name}
+                  onClick={() => handleNavClick(link.href)}
+                  className={`block w-full text-left ${isActive ? 'text-accent bg-accent/10' : 'text-foreground'} hover:text-accent hover:bg-accent/5 font-sans font-medium transition-all py-2 px-4 rounded-lg`}
+                  data-testid={`link-mobile-${link.name.toLowerCase()}`}
+                >
+                  {link.name}
+                </button>
+              );
+            })}
             <Button
               onClick={() => handleNavClick("#contact")}
               className="w-full bg-gradient-to-r from-accent to-yellow-400 text-accent-foreground rounded-full shadow-lg mt-2"
