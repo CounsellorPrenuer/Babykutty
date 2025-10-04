@@ -9,10 +9,12 @@ interface NavbarProps {
 export default function Navbar({ onNavigate }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isInHero, setIsInHero] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      setIsInHero(window.scrollY < window.innerHeight - 100);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -60,7 +62,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
               <button
                 key={link.name}
                 onClick={() => handleNavClick(link.href)}
-                className="text-foreground hover:text-accent font-sans font-medium transition-all duration-200 relative group text-sm lg:text-base"
+                className={`${isInHero ? 'text-white' : 'text-foreground'} hover:text-accent font-sans font-medium transition-all duration-200 relative group text-sm lg:text-base`}
                 data-testid={`link-${link.name.toLowerCase()}`}
               >
                 {link.name}
@@ -85,7 +87,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
             data-testid="button-menu-toggle"
           >
             <svg
-              className="w-6 h-6 text-foreground"
+              className={`w-6 h-6 ${isInHero ? 'text-white' : 'text-foreground'}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
