@@ -28,6 +28,14 @@ Preferred communication style: Simple, everyday language.
   - Details are prefilled in Razorpay payment form for better UX
   - Added name field to payments table schema
 - **Footer Update**: Added partnership text "In partnership with **Mentoria** for enhanced career guidance services" with line break
+- **Admin Dashboard Implementation**: Built comprehensive admin dashboard at `/admin/bookings`
+  - Five functional tabs: Overview, Bookings, Contact Forms, Payments, Lead Downloads
+  - Lead consolidation system: all contacts and payments flow into unified leads table
+  - Stats cards showing total bookings, pending leads, completed payments, conversion rate
+  - Recent leads/contact forms/payments display with date filtering and pagination
+  - Export functionality for all data and individual data types (JSON format)
+  - Comprehensive error handling with retry capability
+  - Graceful degradation when Razorpay credentials unavailable
 
 ## System Architecture
 
@@ -66,11 +74,16 @@ Preferred communication style: Simple, everyday language.
 - `POST /api/contact` - Submit contact form inquiries
 - `POST /api/create-order` - Initialize Razorpay payment order with user details (name, email, phone)
 - `POST /api/verify-payment` - Verify completed Razorpay transactions
+- `GET /api/admin/stats` - Fetch dashboard statistics
+- `GET /api/admin/leads` - Retrieve all consolidated leads
+- `GET /api/admin/contacts` - Retrieve all contact form submissions
+- `GET /api/admin/payments` - Retrieve all payment records
 
 **Data Layer**: 
 - Drizzle ORM for type-safe database operations
 - Database abstraction via `IStorage` interface in `server/storage.ts`
-- `DbStorage` class implements storage operations for contacts and payments
+- `DbStorage` class implements storage operations for contacts, payments, and leads
+- Automatic lead creation: contact forms and payments both create lead entries for unified tracking
 
 **Build Process**:
 - Development: tsx for TypeScript execution with hot reload
@@ -96,6 +109,16 @@ Preferred communication style: Simple, everyday language.
    - status (pending/completed)
    - createdAt (timestamp)
 
+3. **leads** - Consolidated lead tracking system
+   - id (UUID, primary key)
+   - source ("contact" or "payment")
+   - name, email, phone (contact information)
+   - message (nullable, from contact forms)
+   - planName, amount (nullable, from payments)
+   - status ("pending" or "completed")
+   - createdAt (timestamp)
+   - Note: Automatically populated from contacts and payments tables
+
 **Schema Location**: `shared/schema.ts` (shared between client/server for type safety)
 
 **Validation**: Zod schemas generated from Drizzle tables using drizzle-zod
@@ -107,6 +130,8 @@ Preferred communication style: Simple, everyday language.
 - Client-side checkout.js library loaded via CDN
 - Server-side Razorpay SDK for order creation and verification
 - Environment variables: `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`
+- Conditional initialization: Razorpay only initialized when credentials available
+- Graceful degradation: Admin dashboard and non-payment features work without Razorpay credentials
 
 **Database**:
 - Neon Serverless PostgreSQL
