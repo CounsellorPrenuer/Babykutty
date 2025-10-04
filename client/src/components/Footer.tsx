@@ -128,7 +128,7 @@ export default function Footer() {
           </div>
           <br />
           <p className="font-sans text-primary-foreground/60 text-xs sm:text-sm text-center">
-            In partnership with Mentoria for enhanced career guidance services.
+            In partnership with <span className="font-bold">Mentoria</span> for enhanced career guidance services.
           </p>
         </div>
       </div>
