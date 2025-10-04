@@ -1,4 +1,4 @@
-import logoImage from "@assets/logo_1759556754448.png";
+import logoImage from "@assets/logo_1759561523289.png";
 import { SiFacebook } from "react-icons/si";
 import { Mail, Phone, MapPin } from "lucide-react";
 
