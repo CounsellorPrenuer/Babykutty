@@ -36,6 +36,15 @@ Preferred communication style: Simple, everyday language.
   - Export functionality for all data and individual data types (JSON format)
   - Comprehensive error handling with retry capability
   - Graceful degradation when Razorpay credentials unavailable
+- **Blog Management System**: Complete blog CMS with database-driven content
+  - Admin interface at `/admin/blogs` for full CRUD operations
+  - Create/edit blogs with rich content, categories, and visual gradients
+  - Featured blog system: toggle featured status to control homepage visibility
+  - Individual blog detail pages at `/blog/:id` with formatted content rendering
+  - All blogs listing page at `/blogs` showing complete blog catalog
+  - Homepage displays only featured blogs (up to 3) with "View All Blogs" button
+  - Proper cache invalidation: admin changes immediately reflect on public pages
+  - Content formatting supports bold text, headings, numbered/bulleted lists
 
 ## System Architecture
 
@@ -78,6 +87,13 @@ Preferred communication style: Simple, everyday language.
 - `GET /api/admin/leads` - Retrieve all consolidated leads
 - `GET /api/admin/contacts` - Retrieve all contact form submissions
 - `GET /api/admin/payments` - Retrieve all payment records
+- `GET /api/blogs` - Retrieve all blog posts
+- `GET /api/blogs/featured` - Retrieve only featured blog posts
+- `GET /api/blogs/:id` - Retrieve single blog post by ID
+- `POST /api/blogs` - Create new blog post (admin)
+- `PUT /api/blogs/:id` - Update existing blog post (admin)
+- `DELETE /api/blogs/:id` - Delete blog post (admin)
+- `PATCH /api/blogs/:id/feature` - Toggle blog featured status (admin)
 
 **Data Layer**: 
 - Drizzle ORM for type-safe database operations
@@ -118,6 +134,18 @@ Preferred communication style: Simple, everyday language.
    - status ("pending" or "completed")
    - createdAt (timestamp)
    - Note: Automatically populated from contacts and payments tables
+
+4. **blogs** - Blog content management
+   - id (UUID, primary key)
+   - title (text, blog post title)
+   - excerpt (text, short description)
+   - content (text, full article content)
+   - category (text, e.g., "Career Tips", "Student Guide")
+   - date (text, formatted date string)
+   - readTime (text, e.g., "5 min read")
+   - gradient (text, Tailwind gradient classes for header)
+   - featured (integer, 0 or 1 - controls homepage visibility)
+   - createdAt (timestamp)
 
 **Schema Location**: `shared/schema.ts` (shared between client/server for type safety)
 

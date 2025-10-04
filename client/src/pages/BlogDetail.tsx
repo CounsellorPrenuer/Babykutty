@@ -12,7 +12,7 @@ export default function BlogDetail() {
   const blogId = params?.id;
 
   const { data, isLoading, isError } = useQuery<{ success: boolean; blog: Blog }>({
-    queryKey: ["/api/blogs", blogId],
+    queryKey: [`/api/blogs/${blogId}`],
     enabled: !!blogId,
   });
 

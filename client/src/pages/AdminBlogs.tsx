@@ -61,10 +61,11 @@ export default function AdminBlogs() {
 
   const createMutation = useMutation({
     mutationFn: async (data: InsertBlog) => {
-      return await apiRequest("/api/blogs", "POST", data);
+      return await apiRequest("POST", "/api/blogs", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/blogs/featured"] });
       toast({ title: "Blog created successfully" });
       setIsDialogOpen(false);
       form.reset();
@@ -76,10 +77,11 @@ export default function AdminBlogs() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: InsertBlog }) => {
-      return await apiRequest(`/api/blogs/${id}`, "PUT", data);
+      return await apiRequest("PUT", `/api/blogs/${id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/blogs/featured"] });
       toast({ title: "Blog updated successfully" });
       setIsDialogOpen(false);
       setEditingBlog(null);
@@ -92,10 +94,11 @@ export default function AdminBlogs() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      return await apiRequest(`/api/blogs/${id}`, "DELETE");
+      return await apiRequest("DELETE", `/api/blogs/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/blogs/featured"] });
       toast({ title: "Blog deleted successfully" });
     },
     onError: (error: Error) => {
@@ -105,10 +108,11 @@ export default function AdminBlogs() {
 
   const featureMutation = useMutation({
     mutationFn: async ({ id, featured }: { id: string; featured: number }) => {
-      return await apiRequest(`/api/blogs/${id}/feature`, "PATCH", { featured });
+      return await apiRequest("PATCH", `/api/blogs/${id}/feature`, { featured });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/blogs/featured"] });
       toast({ title: "Blog feature status updated" });
     },
     onError: (error: Error) => {
