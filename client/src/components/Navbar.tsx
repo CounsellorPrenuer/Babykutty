@@ -63,15 +63,15 @@ export default function Navbar({ onNavigate }: NavbarProps) {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background/98 backdrop-blur-xl shadow-lg border-b border-border"
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background/95 backdrop-blur-xl shadow-lg border-b border-border"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-        <div className="flex items-center h-16 sm:h-20">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           <div className="flex-shrink-0 group cursor-pointer" onClick={() => handleNavClick("#")}>
             <img
               src={logoImage}
               alt="Career Compass"
-              className="h-14 sm:h-18 w-auto group-hover:scale-105 transition-transform"
+              className="h-12 sm:h-14 w-auto group-hover:scale-105 transition-transform"
               data-testid="img-logo"
             />
           </div>
@@ -85,7 +85,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
                   <button
                     key={link.name}
                     onClick={() => handleNavClick(link.href)}
-                    className={`${isInHero ? 'text-white' : 'text-foreground'} ${isActive ? 'text-accent' : ''} hover:text-accent font-sans font-medium transition-all duration-200 relative group text-sm lg:text-base`}
+                    className={`text-foreground ${isActive ? 'text-accent' : ''} hover:text-accent font-sans font-medium transition-all duration-200 relative group text-sm lg:text-base`}
                     data-testid={`link-${link.name.toLowerCase()}`}
                   >
                     {link.name}
@@ -107,12 +107,13 @@ export default function Navbar({ onNavigate }: NavbarProps) {
           </div>
 
           <button
-            className="md:hidden p-2 hover:bg-accent/10 rounded-lg transition-colors"
+            className="md:hidden p-2 hover:bg-accent/10 rounded-lg transition-colors ml-auto"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             data-testid="button-menu-toggle"
+            aria-label="Toggle menu"
           >
             <svg
-              className={`w-6 h-6 ${isInHero ? 'text-white' : 'text-foreground'}`}
+              className="w-6 h-6 text-foreground"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
