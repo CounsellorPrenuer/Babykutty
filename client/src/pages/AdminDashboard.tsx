@@ -590,6 +590,7 @@ export default function AdminDashboard() {
                         <tr className="border-b">
                           <th className="text-left py-3 px-4">Name</th>
                           <th className="text-left py-3 px-4">Email</th>
+                          <th className="text-left py-3 px-4">Phone</th>
                           <th className="text-left py-3 px-4">Plan</th>
                           <th className="text-left py-3 px-4">Amount</th>
                           <th className="text-left py-3 px-4">Status</th>
@@ -601,6 +602,7 @@ export default function AdminDashboard() {
                           <tr key={payment.id} className="border-b" data-testid={`payment-row-${payment.id}`}>
                             <td className="py-3 px-4">{payment.name || "N/A"}</td>
                             <td className="py-3 px-4">{payment.email || "N/A"}</td>
+                            <td className="py-3 px-4">{payment.phone || "N/A"}</td>
                             <td className="py-3 px-4">{payment.planName}</td>
                             <td className="py-3 px-4">₹{payment.amount.toLocaleString()}</td>
                             <td className="py-3 px-4">
