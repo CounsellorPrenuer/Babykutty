@@ -40,11 +40,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-background/98 backdrop-blur-xl shadow-lg border-b border-border"
-          : "bg-background/80 backdrop-blur-md"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background/98 backdrop-blur-xl shadow-lg border-b border-border"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
