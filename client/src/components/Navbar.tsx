@@ -50,7 +50,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
             <img
               src={logoImage}
               alt="Career Compass"
-              className="h-10 sm:h-12 w-auto group-hover:scale-105 transition-transform"
+              className="h-14 sm:h-18 w-auto group-hover:scale-105 transition-transform"
               data-testid="img-logo"
             />
           </div>

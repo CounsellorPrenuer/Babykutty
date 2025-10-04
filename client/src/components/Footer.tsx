@@ -37,7 +37,7 @@ export default function Footer() {
             <img
               src={logoImage}
               alt="Career Compass"
-              className="h-14 sm:h-16 w-auto mb-4 sm:mb-6 hover:scale-105 transition-transform"
+              className="h-18 sm:h-24 w-auto mb-4 sm:mb-6 hover:scale-105 transition-transform"
               data-testid="img-footer-logo"
             />
             <p className="font-serif text-base sm:text-lg text-accent italic mb-4 sm:mb-6">
