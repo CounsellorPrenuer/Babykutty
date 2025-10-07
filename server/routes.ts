@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactSchema, insertPaymentSchema, insertBlogSchema } from "@shared/schema";
 import Razorpay from "razorpay";
+import { generateBlogPost, improveBlogContent } from "./openai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const razorpay = process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET
@@ -211,6 +212,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ success: false, error: "Blog not found" });
       }
       res.json({ success: true, blog });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.post("/api/blogs/generate", async (req, res) => {
+    try {
+      if (!process.env.OPENAI_API_KEY) {
+        return res.status(500).json({ 
+          success: false, 
+          error: "AI generation not configured. Please add OPENAI_API_KEY to environment variables." 
+        });
+      }
+
+      const { topic, keywords, tone, length } = req.body;
+      
+      if (!topic || !tone || !length) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Topic, tone, and length are required" 
+        });
+      }
+
+      const generatedBlog = await generateBlogPost({ topic, keywords, tone, length });
+      res.json({ success: true, blog: generatedBlog });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  app.post("/api/blogs/improve", async (req, res) => {
+    try {
+      if (!process.env.OPENAI_API_KEY) {
+        return res.status(500).json({ 
+          success: false, 
+          error: "AI improvement not configured. Please add OPENAI_API_KEY to environment variables." 
+        });
+      }
+
+      const { content } = req.body;
+      
+      if (!content) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Content is required" 
+        });
+      }
+
+      const improvedContent = await improveBlogContent(content);
+      res.json({ success: true, content: improvedContent });
     } catch (error: any) {
       res.status(500).json({ success: false, error: error.message });
     }
