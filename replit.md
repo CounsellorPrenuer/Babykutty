@@ -21,6 +21,18 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### October 7, 2025
+- **AI Blog Generation System**: Integrated OpenAI GPT-5 for intelligent content creation
+  - AI-powered blog post generation from topic, keywords, tone, and length preferences
+  - Smart content improvement feature to enhance existing blog posts
+  - Beautiful stats cards showing Total Blog Posts, AI Powered, Smart Editing capabilities
+  - Collapsible AI generation UI in blog creation dialog with purple gradient design
+  - Tone options: Professional, Friendly, Inspirational, Academic
+  - Length options: Short (800-1000 words), Medium (1500-2000 words), Long (2500-3000 words)
+  - Generated content auto-populates title, excerpt, content, category, and read time
+  - "Improve with AI" button for content enhancement with loading states
+  - Full error handling and user feedback via toasts
+
 ### October 4, 2025
 - **Payment Flow Enhancement**: Implemented modal dialog to collect user details before Razorpay payment
   - Modal collects name, email, and phone number
@@ -29,7 +41,7 @@ Preferred communication style: Simple, everyday language.
   - Added name field to payments table schema
 - **Footer Update**: Added partnership text "In partnership with **Mentoria** for enhanced career guidance services" with line break
 - **Admin Dashboard Implementation**: Built comprehensive admin dashboard at `/admin/bookings`
-  - Five functional tabs: Overview, Bookings, Contact Forms, Payments, Lead Downloads
+  - Four functional tabs: Overview, Bookings, Contact Forms, Lead Downloads (Payments tab removed)
   - Lead consolidation system: all contacts and payments flow into unified leads table
   - Stats cards showing total bookings, pending leads, completed payments, conversion rate
   - Recent leads/contact forms/payments display with date filtering and pagination
@@ -94,6 +106,8 @@ Preferred communication style: Simple, everyday language.
 - `PUT /api/blogs/:id` - Update existing blog post (admin)
 - `DELETE /api/blogs/:id` - Delete blog post (admin)
 - `PATCH /api/blogs/:id/feature` - Toggle blog featured status (admin)
+- `POST /api/blogs/generate` - Generate blog post using AI (requires topic, keywords, tone, length)
+- `POST /api/blogs/improve` - Improve blog content using AI (requires content)
 
 **Data Layer**: 
 - Drizzle ORM for type-safe database operations
@@ -152,6 +166,13 @@ Preferred communication style: Simple, everyday language.
 **Validation**: Zod schemas generated from Drizzle tables using drizzle-zod
 
 ### External Dependencies
+
+**AI Content Generation**:
+- OpenAI GPT-5 for intelligent blog content generation and improvement
+- Environment variable: `OPENAI_API_KEY`
+- Server-side OpenAI SDK for chat completions with JSON response format
+- Features: Blog generation from topic/keywords/tone/length, content improvement
+- Graceful error handling when API key unavailable
 
 **Payment Gateway**: 
 - Razorpay for Indian market payment processing

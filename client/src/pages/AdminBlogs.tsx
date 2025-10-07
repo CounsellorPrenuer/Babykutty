@@ -203,12 +203,12 @@ export default function AdminBlogs() {
       return;
     }
     
-    const length = aiLength.includes("short") ? "short" : aiLength.includes("medium") ? "medium" : "long";
+    const length = aiLength.toLowerCase().includes("short") ? "short" : aiLength.toLowerCase().includes("medium") ? "medium" : "long";
     
     generateBlogMutation.mutate({
       topic: aiTopic,
       keywords: aiKeywords,
-      tone: aiTone,
+      tone: aiTone.toLowerCase(),
       length: length,
     });
   };
