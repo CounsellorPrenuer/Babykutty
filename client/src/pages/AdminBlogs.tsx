@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertBlogSchema, type Blog, type InsertBlog } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Plus, Edit, Trash2, Star, StarOff, Calendar, BookOpen, Home } from "lucide-react";
+import { Plus, Edit, Trash2, Star, StarOff, Calendar, BookOpen, Home, Sparkles, Wand2 } from "lucide-react";
 import { useLocation } from "wouter";
 
 const gradientOptions = [
@@ -38,6 +38,11 @@ export default function AdminBlogs() {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
+  const [showAiGeneration, setShowAiGeneration] = useState(false);
+  const [aiTopic, setAiTopic] = useState("");
+  const [aiKeywords, setAiKeywords] = useState("");
+  const [aiTone, setAiTone] = useState("Professional");
+  const [aiLength, setAiLength] = useState("Medium (1500-2000 words)");
 
   const { data: blogsData, isLoading } = useQuery<{ success: boolean; blogs: Blog[] }>({
     queryKey: ["/api/blogs"],
@@ -120,6 +125,38 @@ export default function AdminBlogs() {
     },
   });
 
+  const generateBlogMutation = useMutation({
+    mutationFn: async (params: { topic: string; keywords: string; tone: string; length: string }) => {
+      return await apiRequest("POST", "/api/blogs/generate", params);
+    },
+    onSuccess: (data: any) => {
+      const generatedBlog = data.blog;
+      form.setValue("title", generatedBlog.title);
+      form.setValue("excerpt", generatedBlog.excerpt);
+      form.setValue("content", generatedBlog.content);
+      form.setValue("category", generatedBlog.category);
+      form.setValue("readTime", generatedBlog.readTime);
+      setShowAiGeneration(false);
+      toast({ title: "Blog generated successfully", description: "Review and edit the generated content before publishing" });
+    },
+    onError: (error: Error) => {
+      toast({ title: "Error generating blog", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const improveBlogMutation = useMutation({
+    mutationFn: async (content: string) => {
+      return await apiRequest("POST", "/api/blogs/improve", { content });
+    },
+    onSuccess: (data: any) => {
+      form.setValue("content", data.content);
+      toast({ title: "Content improved successfully", description: "AI has enhanced your blog content" });
+    },
+    onError: (error: Error) => {
+      toast({ title: "Error improving content", description: error.message, variant: "destructive" });
+    },
+  });
+
   const handleSubmit = (data: InsertBlog) => {
     if (editingBlog) {
       updateMutation.mutate({ id: editingBlog.id, data });
@@ -156,7 +193,33 @@ export default function AdminBlogs() {
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setEditingBlog(null);
+    setShowAiGeneration(false);
     form.reset();
+  };
+
+  const handleGenerateBlog = () => {
+    if (!aiTopic.trim()) {
+      toast({ title: "Topic required", description: "Please enter a topic for the blog", variant: "destructive" });
+      return;
+    }
+    
+    const length = aiLength.includes("short") ? "short" : aiLength.includes("medium") ? "medium" : "long";
+    
+    generateBlogMutation.mutate({
+      topic: aiTopic,
+      keywords: aiKeywords,
+      tone: aiTone,
+      length: length,
+    });
+  };
+
+  const handleImproveContent = () => {
+    const currentContent = form.getValues("content");
+    if (!currentContent || currentContent.trim().length === 0) {
+      toast({ title: "No content", description: "Please add some content first", variant: "destructive" });
+      return;
+    }
+    improveBlogMutation.mutate(currentContent);
   };
 
   if (isLoading) {
@@ -176,7 +239,7 @@ export default function AdminBlogs() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-serif font-bold text-foreground mb-2">Blog Management</h1>
-            <p className="text-muted-foreground">Create, edit, and manage your blog posts</p>
+            <p className="text-muted-foreground">Create, edit, and manage blog posts with AI assistance</p>
           </div>
           <div className="flex gap-3">
             <Button onClick={() => navigate("/")} variant="outline" data-testid="button-home">
@@ -185,15 +248,113 @@ export default function AdminBlogs() {
             </Button>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button onClick={() => { setEditingBlog(null); form.reset(); }} data-testid="button-create-blog">
+                <Button 
+                  onClick={() => { setEditingBlog(null); form.reset(); setShowAiGeneration(false); }} 
+                  className="bg-gradient-to-r from-accent to-yellow-400 text-accent-foreground"
+                  data-testid="button-create-blog"
+                >
                   <Plus className="w-4 h-4 mr-2" />
-                  Create Blog
+                  Create New Blog
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>{editingBlog ? "Edit Blog Post" : "Create New Blog Post"}</DialogTitle>
                 </DialogHeader>
+
+                {!editingBlog && (
+                  <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-5 h-5 text-purple-600" />
+                          <CardTitle className="text-lg">AI Blog Generation</CardTitle>
+                        </div>
+                        <Button 
+                          type="button"
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => setShowAiGeneration(!showAiGeneration)}
+                          data-testid="button-toggle-ai"
+                        >
+                          {showAiGeneration ? "Hide" : "Show"}
+                        </Button>
+                      </div>
+                      <p className="text-sm text-muted-foreground">Generate a professional blog post using AI based on your topic and preferences.</p>
+                    </CardHeader>
+                    {showAiGeneration && (
+                      <CardContent className="space-y-3">
+                        <div>
+                          <label className="text-sm font-medium mb-1 block">Topic *</label>
+                          <Input
+                            placeholder="e.g., How to transition to leadership roles"
+                            value={aiTopic}
+                            onChange={(e) => setAiTopic(e.target.value)}
+                            data-testid="input-ai-topic"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium mb-1 block">Keywords (comma separated)</label>
+                          <Input
+                            placeholder="e.g., leadership, career growth, management"
+                            value={aiKeywords}
+                            onChange={(e) => setAiKeywords(e.target.value)}
+                            data-testid="input-ai-keywords"
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-sm font-medium mb-1 block">Tone</label>
+                            <Select value={aiTone} onValueChange={setAiTone}>
+                              <SelectTrigger data-testid="select-ai-tone">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Professional">Professional</SelectItem>
+                                <SelectItem value="Friendly">Friendly</SelectItem>
+                                <SelectItem value="Inspirational">Inspirational</SelectItem>
+                                <SelectItem value="Academic">Academic</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-1 block">Length</label>
+                            <Select value={aiLength} onValueChange={setAiLength}>
+                              <SelectTrigger data-testid="select-ai-length">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Short (800-1000 words)">Short (800-1000 words)</SelectItem>
+                                <SelectItem value="Medium (1500-2000 words)">Medium (1500-2000 words)</SelectItem>
+                                <SelectItem value="Long (2500-3000 words)">Long (2500-3000 words)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <Button
+                          type="button"
+                          onClick={handleGenerateBlog}
+                          disabled={generateBlogMutation.isPending}
+                          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white"
+                          data-testid="button-generate-blog"
+                        >
+                          {generateBlogMutation.isPending ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                              Generating...
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="w-4 h-4 mr-2" />
+                              Generate Blog Post
+                            </>
+                          )}
+                        </Button>
+                      </CardContent>
+                    )}
+                  </Card>
+                )}
+
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
                     <FormField
@@ -234,10 +395,32 @@ export default function AdminBlogs() {
                       name="content"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Content</FormLabel>
+                          <div className="flex items-center justify-between mb-2">
+                            <FormLabel>Content</FormLabel>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={handleImproveContent}
+                              disabled={improveBlogMutation.isPending}
+                              data-testid="button-improve-content"
+                            >
+                              {improveBlogMutation.isPending ? (
+                                <>
+                                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-current mr-2"></div>
+                                  Improving...
+                                </>
+                              ) : (
+                                <>
+                                  <Wand2 className="w-3 h-3 mr-2" />
+                                  Improve with AI
+                                </>
+                              )}
+                            </Button>
+                          </div>
                           <FormControl>
                             <Textarea
-                              placeholder="Full blog content (supports markdown-style formatting)"
+                              placeholder="Full blog content (supports HTML formatting)"
                               rows={10}
                               {...field}
                               data-testid="input-blog-content"
@@ -330,6 +513,50 @@ export default function AdminBlogs() {
               </DialogContent>
             </Dialog>
           </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <Card className="bg-gradient-to-br from-purple-50 to-white border-purple-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-lg bg-purple-100">
+                  <Sparkles className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">{blogs.length}</p>
+                  <p className="text-sm text-muted-foreground">Total Blog Posts</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-green-50 to-white border-green-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-lg bg-green-100">
+                  <Sparkles className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">AI Powered</p>
+                  <p className="text-sm text-muted-foreground">Content Generation</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-lg bg-blue-100">
+                  <Wand2 className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">Smart Editing</p>
+                  <p className="text-sm text-muted-foreground">AI Content Improvement</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {blogs.length === 0 ? (
