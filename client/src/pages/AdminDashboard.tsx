@@ -6,7 +6,6 @@ import {
   Eye,
   Calendar,
   Mail,
-  CreditCard,
   Download,
   FileText,
   LogOut,
@@ -206,7 +205,7 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid" data-testid="tabs-navigation">
+          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid" data-testid="tabs-navigation">
             <TabsTrigger value="overview" data-testid="tab-overview">
               <Eye className="w-4 h-4 mr-2" />
               Overview
@@ -218,10 +217,6 @@ export default function AdminDashboard() {
             <TabsTrigger value="contacts" data-testid="tab-contacts">
               <Mail className="w-4 h-4 mr-2" />
               Contact Forms
-            </TabsTrigger>
-            <TabsTrigger value="payments" data-testid="tab-payments">
-              <CreditCard className="w-4 h-4 mr-2" />
-              Payments
             </TabsTrigger>
             <TabsTrigger value="leads" data-testid="tab-leads">
               <Download className="w-4 h-4 mr-2" />
@@ -565,54 +560,6 @@ export default function AdminDashboard() {
                             <td className="py-3 px-4">{contact.phone || "N/A"}</td>
                             <td className="py-3 px-4 max-w-xs truncate">{contact.message}</td>
                             <td className="py-3 px-4">{new Date(contact.createdAt).toLocaleDateString()}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="payments">
-            <Card>
-              <CardHeader>
-                <CardTitle>All Payments</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {payments.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">No payments available</p>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="text-left py-3 px-4">Name</th>
-                          <th className="text-left py-3 px-4">Email</th>
-                          <th className="text-left py-3 px-4">Phone</th>
-                          <th className="text-left py-3 px-4">Plan</th>
-                          <th className="text-left py-3 px-4">Amount</th>
-                          <th className="text-left py-3 px-4">Status</th>
-                          <th className="text-left py-3 px-4">Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {payments.map((payment) => (
-                          <tr key={payment.id} className="border-b" data-testid={`payment-row-${payment.id}`}>
-                            <td className="py-3 px-4">{payment.name || "N/A"}</td>
-                            <td className="py-3 px-4">{payment.email || "N/A"}</td>
-                            <td className="py-3 px-4">{payment.phone || "N/A"}</td>
-                            <td className="py-3 px-4">{payment.planName}</td>
-                            <td className="py-3 px-4">₹{payment.amount.toLocaleString()}</td>
-                            <td className="py-3 px-4">
-                              <span className={`px-2 py-1 rounded text-xs ${
-                                payment.status === "completed" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
-                              }`}>
-                                {payment.status}
-                              </span>
-                            </td>
-                            <td className="py-3 px-4">{new Date(payment.createdAt).toLocaleDateString()}</td>
                           </tr>
                         ))}
                       </tbody>
