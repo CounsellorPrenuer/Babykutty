@@ -177,11 +177,11 @@ export default function Contact() {
                   <div>
                     <div className="font-sans font-semibold text-foreground mb-2 text-sm sm:text-base">Email</div>
                     <a
-                      href="mailto:babykutty67@gmail.com"
+                      href="mailto:counsellor@careercampassplus.com"
                       className="font-sans text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors"
                       data-testid="link-email"
                     >
-                      babykutty67@gmail.com
+                      counsellor@careercampassplus.com
                     </a>
                   </div>
                 </div>
@@ -193,11 +193,11 @@ export default function Contact() {
                   <div>
                     <div className="font-sans font-semibold text-foreground mb-2 text-sm sm:text-base">Phone</div>
                     <a
-                      href="tel:+919995178849"
+                      href="tel:+918089545498"
                       className="font-sans text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors"
                       data-testid="link-phone"
                     >
-                      +91 99951 78849
+                      +91 80895 45498
                     </a>
                   </div>
                 </div>
