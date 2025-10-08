@@ -31,7 +31,7 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
         <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="inline-block mb-4">
-            <span className="text-accent font-semibold text-sm sm:text-base tracking-wider uppercase">About Us</span>
+            <span className="text-accent font-semibold text-lg sm:text-xl md:text-2xl tracking-wider uppercase">About Us</span>
           </div>
           
           <p className="font-serif text-xl sm:text-2xl md:text-3xl bg-gradient-to-r from-accent to-yellow-400 bg-clip-text text-transparent mb-6 sm:mb-8" data-testid="text-about-subheadline">
