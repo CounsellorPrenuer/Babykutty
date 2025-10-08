@@ -176,11 +176,11 @@ export default function Contact() {
                   <div>
                     <div className="font-sans font-semibold text-foreground mb-2 text-sm sm:text-base">Email</div>
                     <a
-                      href="mailto:counsellor@careercampassplus.com"
+                      href="mailto:counsellor@careercompassplus.com"
                       className="font-sans text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors"
                       data-testid="link-email"
                     >
-                      counsellor@careercampassplus.com
+                      counsellor@careercompassplus.com
                     </a>
                   </div>
                 </div>

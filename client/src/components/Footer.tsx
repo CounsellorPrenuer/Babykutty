@@ -83,10 +83,10 @@ export default function Footer() {
               <div className="flex items-start gap-3 group">
                 <Mail className="w-5 h-5 text-accent flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                 <a
-                  href="mailto:counsellor@careercampassplus.com"
+                  href="mailto:counsellor@careercompassplus.com"
                   className="font-sans text-sm sm:text-base text-primary-foreground/80 hover:text-accent transition-colors break-all"
                 >
-                  counsellor@careercampassplus.com
+                  counsellor@careercompassplus.com
                 </a>
               </div>
               <div className="flex items-start gap-3 group">
