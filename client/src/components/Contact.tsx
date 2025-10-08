@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, CheckCircle2, Users, Building2, GraduationCap, PlayCircle, ExternalLink } from "lucide-react";
-import { SiFacebook } from "react-icons/si";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -198,22 +197,6 @@ export default function Contact() {
                       data-testid="link-phone"
                     >
                       +91 80895 45498
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 group">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-accent/20 to-accent/10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:from-accent/30 group-hover:to-accent/20 transition-all shadow-lg">
-                    <SiFacebook className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
-                  </div>
-                  <div>
-                    <div className="font-sans font-semibold text-foreground mb-2 text-sm sm:text-base">Facebook</div>
-                    <a
-                      href="#"
-                      className="font-sans text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors"
-                      data-testid="link-facebook"
-                    >
-                      Connect on Facebook
                     </a>
                   </div>
                 </div>
