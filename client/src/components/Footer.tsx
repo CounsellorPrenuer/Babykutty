@@ -1,5 +1,4 @@
 import logoImage from "@assets/logo_1759561523289.png";
-import { SiFacebook } from "react-icons/si";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function Footer() {
@@ -84,28 +83,19 @@ export default function Footer() {
               <div className="flex items-start gap-3 group">
                 <Mail className="w-5 h-5 text-accent flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                 <a
-                  href="mailto:babykutty67@gmail.com"
+                  href="mailto:counsellor@careercampassplus.com"
                   className="font-sans text-sm sm:text-base text-primary-foreground/80 hover:text-accent transition-colors break-all"
                 >
-                  babykutty67@gmail.com
+                  counsellor@careercampassplus.com
                 </a>
               </div>
               <div className="flex items-start gap-3 group">
                 <Phone className="w-5 h-5 text-accent flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                 <a
-                  href="tel:+919995178849"
+                  href="tel:+918089545498"
                   className="font-sans text-sm sm:text-base text-primary-foreground/80 hover:text-accent transition-colors"
                 >
-                  +91 99951 78849
-                </a>
-              </div>
-              <div className="pt-2">
-                <a
-                  href="#"
-                  className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-primary-foreground/10 hover:bg-accent rounded-full hover:text-accent-foreground transition-all duration-300 hover:scale-110 shadow-lg"
-                  data-testid="link-footer-facebook"
-                >
-                  <SiFacebook className="w-5 h-5 sm:w-6 sm:h-6" />
+                  +91 80895 45498
                 </a>
               </div>
             </div>
