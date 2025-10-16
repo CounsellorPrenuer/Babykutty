@@ -17,7 +17,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
       setIsScrolled(window.scrollY > 20);
       setIsInHero(window.scrollY < window.innerHeight - 100);
 
-      const sections = ["about", "services", "blog", "contact"];
+      const sections = ["about", "services", "packages", "blog", "contact"];
       const scrollPosition = window.scrollY + 200;
 
       for (const section of sections) {
@@ -46,6 +46,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
   const navLinks = [
     { name: "About", href: "#about" },
     { name: "Services", href: "#services" },
+    { name: "Packages", href: "#packages" },
     { name: "Blog", href: "#blog" },
     { name: "Contact", href: "#contact" },
   ];
