@@ -3,19 +3,40 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, ArrowRight, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import type { Blog as BlogType } from "@shared/schema";
+import { sanityClient } from "@/lib/sanity";
+import groq from "groq";
+
+interface BlogType {
+  _id: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  readTime: string;
+  gradient: string;
+}
 
 export default function Blog() {
   const [, navigate] = useLocation();
   const [visibleCards, setVisibleCards] = useState<boolean[]>([]);
+  const [blogPosts, setBlogPosts] = useState<BlogType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data, isLoading } = useQuery<{ success: boolean; blogs: BlogType[] }>({
-    queryKey: ["/api/blogs/featured"],
-  });
-
-  const blogPosts = data?.blogs || [];
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const query = groq`*[_type == "blog" && featured == true] | order(date desc)`;
+        const data = await sanityClient.fetch(query);
+        setBlogPosts(data);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBlogs();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -47,6 +68,10 @@ export default function Blog() {
     navigate(`/blog/${blogId}`);
   };
 
+  if (isLoading) {
+    return <div className="py-24 text-center">Loading blogs...</div>;
+  }
+
   return (
     <section id="blog" className="py-16 sm:py-20 md:py-24 lg:py-32 bg-gradient-to-b from-muted/30 to-background relative overflow-hidden">
       <div className="absolute inset-0">
@@ -74,9 +99,8 @@ export default function Blog() {
               key={index}
               data-blog-card
               data-index={index}
-              className={`transition-all duration-700 ${
-                visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
+              className={`transition-all duration-700 ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
             >
               <Card
                 className="h-full backdrop-blur-xl bg-card border-2 border-card-border hover:border-accent/50 hover:-translate-y-3 hover:shadow-2xl hover:shadow-accent/10 transition-all duration-500 flex flex-col group overflow-hidden"
@@ -85,7 +109,7 @@ export default function Blog() {
                 <CardHeader className="p-0">
                   <div className={`aspect-video bg-gradient-to-br ${post.gradient} rounded-t-lg relative overflow-hidden group-hover:scale-105 transition-transform duration-500`}>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                    
+
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="absolute inset-0 opacity-10">
                         <svg className="w-full h-full" viewBox="0 0 100 100">
@@ -94,7 +118,7 @@ export default function Blog() {
                         </svg>
                       </div>
                     </div>
-                    
+
                     <div className="absolute top-4 left-4">
                       <Badge className="bg-white/90 text-foreground backdrop-blur-sm hover:bg-white shadow-lg" data-testid={`text-blog-category-${index}`}>
                         {post.category}
@@ -121,7 +145,7 @@ export default function Blog() {
                     <span className="text-accent">{post.readTime}</span>
                   </div>
                   <button
-                    onClick={() => handleReadMore(post.id)}
+                    onClick={() => handleReadMore(post._id)}
                     className="flex items-center gap-2 text-accent hover:gap-3 transition-all font-semibold text-sm group/btn"
                     data-testid={`button-blog-read-${index}`}
                   >

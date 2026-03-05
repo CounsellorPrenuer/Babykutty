@@ -44,7 +44,29 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const subject = `Inquiry from ${formData.name}`;
+    const body = `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`;
+
+    const mailtoUrl = `mailto:counsellor@careercompassplus.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    // Open mail client immediately to avoid browser popup blockers on async actions
+    window.location.href = mailtoUrl;
+
+    // Fire and forget database save attempt
     contactMutation.mutate(formData);
+
+
+    setIsSubmitted(true);
+    toast({
+      title: "Redirecting to your email app...",
+      description: "Please send the drafted email to complete your inquiry.",
+    });
+
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    }, 3000);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -167,7 +189,7 @@ export default function Contact() {
           <div className="lg:col-span-2 space-y-6 sm:space-y-8">
             <div className="backdrop-blur-xl bg-card/50 border-2 border-card-border rounded-2xl p-6 sm:p-8 shadow-xl">
               <h3 className="font-serif font-bold text-xl sm:text-2xl text-foreground mb-6 sm:mb-8">Contact Information</h3>
-              
+
               <div className="space-y-6">
                 <div className="flex items-start gap-4 group">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-accent/20 to-accent/10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:from-accent/30 group-hover:to-accent/20 transition-all shadow-lg">
@@ -259,8 +281,8 @@ export default function Contact() {
                   <div className="font-serif font-bold text-2xl sm:text-3xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                     MENTORIA
                   </div>
-                  <a 
-                    href="https://mentoria.com" 
+                  <a
+                    href="https://mentoria.com"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-accent hover:text-accent/80 transition-colors font-sans font-semibold text-sm sm:text-base"

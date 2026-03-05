@@ -1,20 +1,51 @@
-import { useQuery } from "@tanstack/react-query";
 import { useRoute, useLocation } from "wouter";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
-import type { Blog } from "@shared/schema";
+import { useEffect, useState } from "react";
+import { sanityClient } from "@/lib/sanity";
+import groq from "groq";
+
+interface BlogType {
+  _id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  date: string;
+  readTime: string;
+  gradient: string;
+}
 
 export default function BlogDetail() {
   const [, params] = useRoute("/blog/:id");
   const [, navigate] = useLocation();
   const blogId = params?.id;
+  const [blog, setBlog] = useState<BlogType | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
-  const { data, isLoading, isError } = useQuery<{ success: boolean; blog: Blog }>({
-    queryKey: [`/api/blogs/${blogId}`],
-    enabled: !!blogId,
-  });
+  useEffect(() => {
+    const fetchBlog = async () => {
+      if (!blogId) return;
+      try {
+        const query = groq`*[_type == "blog" && _id == $id][0]`;
+        const data = await sanityClient.fetch(query, { id: blogId });
+        if (data) {
+          setBlog(data);
+        } else {
+          setIsError(true);
+        }
+      } catch (error) {
+        console.error("Error fetching blog:", error);
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBlog();
+  }, [blogId]);
 
   if (isLoading) {
     return (
@@ -27,7 +58,7 @@ export default function BlogDetail() {
     );
   }
 
-  if (isError || !data?.blog) {
+  if (isError || !blog) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="max-w-md">
@@ -42,8 +73,6 @@ export default function BlogDetail() {
       </div>
     );
   }
-
-  const blog = data.blog;
 
   return (
     <div className="min-h-screen bg-background">
@@ -89,7 +118,7 @@ export default function BlogDetail() {
             <div className="prose prose-lg max-w-none" data-testid="text-blog-content">
               {blog.content.split('\n').map((paragraph, index) => {
                 if (!paragraph.trim()) return null;
-                
+
                 if (paragraph.trim().startsWith('**') && paragraph.trim().endsWith('**')) {
                   const text = paragraph.trim().slice(2, -2);
                   return (
@@ -98,7 +127,7 @@ export default function BlogDetail() {
                     </h3>
                   );
                 }
-                
+
                 if (paragraph.trim().match(/^\d+\./)) {
                   return (
                     <p key={index} className="text-foreground leading-relaxed mb-4 ml-4">
@@ -106,7 +135,7 @@ export default function BlogDetail() {
                     </p>
                   );
                 }
-                
+
                 if (paragraph.trim().startsWith('-')) {
                   return (
                     <p key={index} className="text-foreground leading-relaxed mb-2 ml-4">
@@ -114,10 +143,10 @@ export default function BlogDetail() {
                     </p>
                   );
                 }
-                
+
                 return (
                   <p key={index} className="text-foreground leading-relaxed mb-6">
-                    {paragraph.split('**').map((part, i) => 
+                    {paragraph.split('**').map((part, i) =>
                       i % 2 === 1 ? <strong key={i} className="font-semibold text-accent">{part}</strong> : part
                     )}
                   </p>
@@ -134,7 +163,10 @@ export default function BlogDetail() {
                 <Button onClick={() => {
                   navigate("/");
                   setTimeout(() => {
-                    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                    const contactSection = document.getElementById("contact");
+                    if (contactSection) {
+                      contactSection.scrollIntoView({ behavior: "smooth" });
+                    }
                   }, 100);
                 }} data-testid="button-contact">
                   Get in Touch
