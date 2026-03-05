@@ -162,26 +162,58 @@ export default function Packages() {
     const amount = calculateTotal(selectedPackage.price);
 
     try {
-      // Typically you'd create an order on the backend here,
-      // but to maintain static site compatibility similar to the payment-button.js
-      // we initialize Razorpay directly. Note: direct client-side init limits some features, 
-      // but works for basic capture.
+      const { apiRequest } = await import("@/lib/queryClient");
+      const orderRes = await apiRequest("POST", "/api/create-order", {
+        amount,
+        planName: selectedPackage.planName,
+        name: checkoutForm.name,
+        email: checkoutForm.email,
+        phone: checkoutForm.phone
+      });
+      const orderData = await orderRes.json();
+
+      if (!orderData.success) {
+        throw new Error(orderData.error || "Order creation failed");
+      }
+
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_live_PLACEHOLDER", // Fallback for dev
-        amount: amount * 100, // Amount to be paid in paise
+        key: orderData.key,
+        amount: amount * 100,
         currency: "INR",
         name: "Career Compass Plus",
         description: selectedPackage.planName,
-        handler: function (response: any) {
-          // Success callback
-          toast({
-            title: "Payment Successful!",
-            description: "Thank you for your purchase.",
-          });
-          setIsCheckoutOpen(false);
-          setAppliedCoupon(null);
-          setCouponCode("");
-          setCheckoutForm({ name: "", email: "", phone: "" });
+        order_id: orderData.orderId,
+        handler: async function (response: any) {
+          try {
+            const verifyRes = await apiRequest("POST", "/api/verify-payment", {
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpaySignature: response.razorpay_signature,
+              paymentId: orderData.paymentId,
+              email: checkoutForm.email,
+              phone: checkoutForm.phone
+            });
+            const verifyData = await verifyRes.json();
+
+            if (verifyData.success) {
+              toast({
+                title: "Payment Successful!",
+                description: "Thank you for your purchase. We will contact you soon.",
+              });
+              setIsCheckoutOpen(false);
+              setAppliedCoupon(null);
+              setCouponCode("");
+              setCheckoutForm({ name: "", email: "", phone: "" });
+            } else {
+              throw new Error(verifyData.error || "Verification failed");
+            }
+          } catch (error: any) {
+            toast({
+              title: "Payment Verification Failed",
+              description: error.message,
+              variant: "destructive",
+            });
+          }
         },
         prefill: {
           name: checkoutForm.name,
@@ -189,7 +221,7 @@ export default function Packages() {
           contact: checkoutForm.phone,
         },
         theme: {
-          color: "#D4AF37", // Gold accent
+          color: "#D4AF37",
         },
       };
 
@@ -202,16 +234,17 @@ export default function Packages() {
         });
       });
       rzp.open();
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to initialize payment.",
+        description: error.message || "Failed to initialize payment.",
         variant: "destructive",
       });
     } finally {
       setIsProcessingPayment(false);
     }
   };
+
 
   const activeCategory = standardCategories.find((cat) => cat.id === activeTab);
 

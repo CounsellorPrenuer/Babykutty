@@ -1,0 +1,8 @@
+name = "mentoria-backend"
+main = "src/index.ts"
+compatibility_date = "2024-03-05"
+
+[vars]
+SANITY_PROJECT_ID = "xwphlsr2"
+SANITY_DATASET = "production"
+# Razorpay and Database keys will be added as secrets via wrangler CLI
