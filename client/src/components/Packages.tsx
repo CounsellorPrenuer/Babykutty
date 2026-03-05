@@ -471,7 +471,7 @@ function PackageCard({ pkg, index, isCustom = false, onSelect }: { pkg: Package,
       </CardContent>
 
       <CardFooter className="pt-6 sm:pt-8 px-4 sm:px-6 pb-6 sm:pb-8 flex justify-center mt-auto z-10">
-        {pkg.paymentButtonId ? (
+        {pkg.paymentButtonId || isCustom ? (
           <Button
             className="w-full rounded-full min-h-11 sm:min-h-12 text-sm sm:text-base font-bold bg-gradient-to-r from-accent to-yellow-400 text-accent-foreground hover:scale-105 hover:shadow-lg transition-all"
             onClick={onSelect}
