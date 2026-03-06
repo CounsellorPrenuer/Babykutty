@@ -142,7 +142,7 @@ export default function Blog() {
         {!loading && blogPosts.length > 0 && (
           <div className="text-center mt-12">
             <Button
-              onClick={() => navigate("/blogs")}
+              onClick={() => navigate("/Babykutty/blogs")}
               size="lg"
               variant="outline"
               className="hover:bg-accent hover:text-accent-foreground"
