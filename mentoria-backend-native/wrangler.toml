@@ -1,9 +1,0 @@
-name = "mentoria-backend"
-main = "src/index.ts"
-compatibility_date = "2024-03-04"
-account_id = "dedcb339ae411669d19772f5d3243f35"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "babykutty_db"
-database_id = "2db5ff15-a289-47a3-abe1-03d1fefd667d"
