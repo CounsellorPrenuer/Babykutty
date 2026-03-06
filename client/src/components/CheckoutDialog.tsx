@@ -131,9 +131,10 @@ export default function CheckoutDialog({
         rzp.open();
       }
     } catch (error: any) {
+      console.error("Payment initiation error:", error);
       toast({
         title: "Error",
-        description: error.message || "Something went wrong.",
+        description: error.message || "Failed to initiate payment. Please try again.",
         variant: "destructive",
       });
     }

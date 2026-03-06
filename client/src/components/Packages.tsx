@@ -49,7 +49,8 @@ export default function Packages() {
   const customPackages = packages.filter((p) => p.packageType === "custom");
 
   const renderPackageCard = (pkg: Package, index: number) => {
-    const amount = parseInt(pkg.price.replace(/[₹,]/g, ""));
+    // Robust price parsing for strings like "₹5,500" or "5500"
+    const amount = parseInt(pkg.price.toString().replace(/[^\d]/g, "")) || 0;
     const isPremium = pkg.planName.toLowerCase().includes("plus");
 
     return (
