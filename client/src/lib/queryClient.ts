@@ -7,7 +7,7 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-const WORKER_URL = "https://mentoria-backend.gauravgoodreads.workers.dev";
+const WORKER_URL = "https://mentoria-backend-new.gauravgoodreads.workers.dev";
 
 export async function apiRequest(
   method: string,

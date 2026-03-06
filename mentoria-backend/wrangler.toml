@@ -1,0 +1,7 @@
+name = "mentoria-backend-new"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = [ "nodejs_compat" ]
+
+[vars]
+# We will use secret environment variables for the Razorpay keys
