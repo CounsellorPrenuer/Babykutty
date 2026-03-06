@@ -30,6 +30,8 @@ interface Package {
   categoryLabel: string;
   packageType?: 'standard' | 'custom';
   subgroup?: string;
+  description?: string;
+  image?: any;
 }
 
 interface Category {
@@ -304,17 +306,30 @@ export default function Packages() {
         {/* Custom Packages Section */}
         <hr className="border-card-border mb-24" />
 
-        <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-block mb-4">
-            <span className="text-accent font-semibold text-sm sm:text-base tracking-wider uppercase">Personalized Flexibility</span>
+        <div className="relative mb-16 sm:mb-20">
+          <div className="absolute inset-0 bg-gradient-to-r from-accent/10 to-transparent rounded-3xl -z-10"></div>
+          <div className="flex flex-col lg:flex-row items-center gap-8 p-8 sm:p-12 rounded-3xl border-2 border-accent/20 backdrop-blur-sm">
+            <div className="flex-1 text-center lg:text-left">
+              <div className="inline-block mb-4">
+                <span className="text-accent font-semibold text-sm sm:text-base tracking-wider uppercase">Personalized Flexibility</span>
+              </div>
+              <h2 className="font-serif font-bold text-3xl sm:text-4xl md:text-5xl lg:text-3xl text-foreground mb-4 sm:mb-6">
+                Want To Customise Your Mentorship Plan?
+              </h2>
+              <p className="text-muted-foreground text-lg sm:text-xl max-w-2xl mb-6">
+                If you want to subscribe to specific services from Mentoria that resolve your career challenges, you can choose one or more of the following:
+              </p>
+              <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-accent to-yellow-400 rounded-full mx-auto lg:mx-0"></div>
+            </div>
+            <div className="flex-shrink-0 w-full lg:w-1/3">
+              <img
+                src="/customize_plan_header.png"
+                alt="Customize Plan"
+                className="w-full h-auto rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
+                onError={(e) => (e.currentTarget.style.display = 'none')}
+              />
+            </div>
           </div>
-          <h2 className="font-serif font-bold text-3xl sm:text-4xl md:text-5xl lg:text-3xl text-foreground mb-4 sm:mb-6 px-4">
-            Want To Customise Your Mentorship Plan?
-          </h2>
-          <p className="text-muted-foreground text-lg sm:text-xl max-w-3xl mx-auto mb-6">
-            If you want to subscribe to specific services from Mentoria that resolve your career challenges, you can choose one or more of the following:
-          </p>
-          <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-accent to-yellow-400 mx-auto rounded-full"></div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -450,24 +465,30 @@ function PackageCard({ pkg, index, isCustom = false, onSelect }: { pkg: Package,
       </CardHeader>
 
       <CardContent className="px-4 sm:px-6">
-        <ul className="space-y-3 sm:space-y-4">
-          {pkg.features.map((feature, featureIndex) => (
-            <li key={featureIndex} className="flex items-start gap-3">
-              <div className={`flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center mt-0.5 ${feature.included ? 'bg-green-500/20' : 'bg-red-500/20'
-                }`}>
-                {feature.included ? (
-                  <Check className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                ) : (
-                  <X className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
-                )}
-              </div>
-              <span className={`font-sans text-sm sm:text-base ${feature.included ? 'text-card-foreground' : 'text-muted-foreground line-through'
-                }`}>
-                {feature.text}
-              </span>
-            </li>
-          ))}
-        </ul>
+        {pkg.description ? (
+          <p className="font-sans text-sm sm:text-base text-muted-foreground leading-relaxed mb-6">
+            {pkg.description}
+          </p>
+        ) : (
+          <ul className="space-y-3 sm:space-y-4">
+            {pkg.features.map((feature, featureIndex) => (
+              <li key={featureIndex} className="flex items-start gap-3">
+                <div className={`flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center mt-0.5 ${feature.included ? 'bg-green-500/20' : 'bg-red-500/20'
+                  }`}>
+                  {feature.included ? (
+                    <Check className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                  ) : (
+                    <X className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
+                  )}
+                </div>
+                <span className={`font-sans text-sm sm:text-base ${feature.included ? 'text-card-foreground' : 'text-muted-foreground line-through'
+                  }`}>
+                  {feature.text}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </CardContent>
 
       <CardFooter className="pt-6 sm:pt-8 px-4 sm:px-6 pb-6 sm:pb-8 flex justify-center mt-auto z-10">

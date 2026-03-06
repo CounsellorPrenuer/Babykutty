@@ -46,6 +46,19 @@ export default {
             description: 'Used for grouping standard packages',
         },
         {
+            name: 'description',
+            title: 'Description',
+            type: 'text',
+        },
+        {
+            name: 'image',
+            title: 'Image',
+            type: 'image',
+            options: {
+                hotspot: true,
+            },
+        },
+        {
             name: 'features',
             title: 'Features',
             type: 'array',
