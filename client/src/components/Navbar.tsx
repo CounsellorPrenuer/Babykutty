@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-const logoImage = "/logo.png";
+import logoImage from "@/assets/logo.png";
 
 interface NavbarProps {
   onNavigate?: (section: string) => void;
