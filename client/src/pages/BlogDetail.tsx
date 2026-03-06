@@ -7,9 +7,10 @@ import { ArrowLeft, Calendar, Clock, Loader2 } from "lucide-react";
 import { sanityClient } from "@/lib/sanity";
 
 export default function BlogDetail() {
-  const [, params] = useRoute("/blog/:id");
+  const [, params1] = useRoute("/blog/:id");
+  const [, params2] = useRoute("/Babykutty/blog/:id");
   const [, navigate] = useLocation();
-  const blogId = params?.id;
+  const blogId = params1?.id || params2?.id;
   const [blog, setBlog] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
