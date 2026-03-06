@@ -84,9 +84,9 @@ export default function AllBlogs() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {blogs.map((blog) => (
               <Card
-                key={blog.id}
+                key={blog._id}
                 className="h-full backdrop-blur-xl bg-card border-2 border-card-border hover:border-accent/50 hover:-translate-y-3 hover:shadow-2xl hover:shadow-accent/10 transition-all duration-500 flex flex-col group overflow-hidden"
-                data-testid={`card-blog-${blog.id}`}
+                data-testid={`card-blog-${blog._id}`}
               >
                 <CardHeader className="p-0">
                   <div className={`aspect-video bg-gradient-to-br ${blog.gradient} rounded-t-lg relative overflow-hidden group-hover:scale-105 transition-transform duration-500`}>
@@ -117,9 +117,9 @@ export default function AllBlogs() {
                     <span className="text-accent">{blog.readTime}</span>
                   </div>
                   <button
-                    onClick={() => navigate(`/blog/${blog.id}`)}
+                    onClick={() => navigate(`/blog/${blog._id}`)}
                     className="flex items-center gap-2 text-accent hover:gap-3 transition-all font-semibold text-sm group/btn"
-                    data-testid={`button-read-${blog.id}`}
+                    data-testid={`button-read-${blog._id}`}
                   >
                     Read More
                     <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
