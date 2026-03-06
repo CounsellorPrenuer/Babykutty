@@ -1,0 +1,8 @@
+{
+  "name": "mentoria-backend-native",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
