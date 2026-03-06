@@ -50,12 +50,8 @@ export default function Contact() {
 
     const mailtoUrl = `mailto:counsellor@careercompassplus.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    // Open mail client immediately to avoid browser popup blockers on async actions
+    // Open mail client immediately
     window.location.href = mailtoUrl;
-
-    // Fire and forget database save attempt
-    contactMutation.mutate(formData);
-
 
     setIsSubmitted(true);
     toast({
