@@ -117,7 +117,7 @@ export default function AllBlogs() {
                     <span className="text-accent">{blog.readTime}</span>
                   </div>
                   <button
-                    onClick={() => navigate(`/blog/${blog._id}`)}
+                    onClick={() => navigate(`/Babykutty/blog/${blog._id}`)}
                     className="flex items-center gap-2 text-accent hover:gap-3 transition-all font-semibold text-sm group/btn"
                     data-testid={`button-read-${blog._id}`}
                   >

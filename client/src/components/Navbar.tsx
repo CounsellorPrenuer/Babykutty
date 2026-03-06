@@ -46,6 +46,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
   const navLinks = [
     { name: "About", href: "#about" },
     { name: "Services", href: "#services" },
+    { name: "Pricing", href: "#packages" },
     { name: "Blog", href: "#blog" },
     { name: "Contact", href: "#contact" },
   ];

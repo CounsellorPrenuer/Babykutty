@@ -53,7 +53,7 @@ export default function Blog() {
   }, [blogPosts.length]);
 
   const handleReadMore = (blogId: string) => {
-    navigate(`/blog/${blogId}`);
+    navigate(`/Babykutty/blog/${blogId}`);
   };
 
   return (
