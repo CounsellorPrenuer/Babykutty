@@ -164,6 +164,6 @@ export default function BlogDetail() {
           </Button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
