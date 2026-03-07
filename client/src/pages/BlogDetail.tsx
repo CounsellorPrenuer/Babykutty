@@ -97,7 +97,7 @@ export default function BlogDetail() {
             </div>
 
             <div className="prose prose-lg max-w-none" data-testid="text-blog-content">
-              {blog.content.split('\n').map((paragraph, index) => {
+              {(blog.content || "").split('\n').map((paragraph, index) => {
                 if (!paragraph.trim()) return null;
                 
                 if (paragraph.trim().startsWith('**') && paragraph.trim().endsWith('**')) {
