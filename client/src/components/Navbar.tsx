@@ -53,12 +53,23 @@ export default function Navbar({ onNavigate }: NavbarProps) {
 
   const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false);
-    const section = href.substring(1);
-    if (onNavigate) {
-      onNavigate(section);
+    if (href === "#") {
+      navigate("/Babykutty/");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
     } else {
-      const element = document.querySelector(href);
-      element?.scrollIntoView({ behavior: "smooth" });
+      // If we're on a subpage (like /blog/:id), navigate back to home first
+      navigate("/Babykutty/");
+      // Wait for navigation and then scroll
+      setTimeout(() => {
+        const el = document.querySelector(href);
+        el?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
     }
   };
 

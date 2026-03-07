@@ -16,7 +16,10 @@ export default function BlogDetail() {
 
   useEffect(() => {
     async function fetchBlog() {
-      if (!blogId) return;
+      if (!blogId) {
+        setLoading(false);
+        return;
+      }
       try {
         const data = await sanityClient.fetch(`*[_type == "blog" && _id == $id][0]`, { id: blogId });
         setBlog(data);
