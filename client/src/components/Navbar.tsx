@@ -56,7 +56,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
   const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false);
     if (href === "#") {
-      navigate("/Babykutty/");
+      navigate("/");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -66,7 +66,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
       element.scrollIntoView({ behavior: "smooth" });
     } else {
       // If we're on a subpage (like /blog/:id), navigate back to home first
-      navigate("/Babykutty/");
+      navigate("/");
       // Wait for navigation and then scroll
       setTimeout(() => {
         const el = document.querySelector(href);

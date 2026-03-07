@@ -7,10 +7,9 @@ import { ArrowLeft, Calendar, Clock, Loader2 } from "lucide-react";
 import { sanityClient } from "@/lib/sanity";
 
 export default function BlogDetail() {
-  const [, params1] = useRoute("/blog/:id");
-  const [, params2] = useRoute("/Babykutty/blog/:id");
+  const [, params] = useRoute("/blog/:id");
   const [, navigate] = useLocation();
-  const blogId = params1?.id || params2?.id;
+  const blogId = params?.id;
   const [blog, setBlog] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -34,7 +33,7 @@ export default function BlogDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Loader2 className="w-12 h-12 text-accent animate-spin" />
       </div>
     );
@@ -42,11 +41,11 @@ export default function BlogDetail() {
 
   if (!blog) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="max-w-md">
           <CardContent className="pt-6 text-center">
             <p className="text-xl font-semibold text-foreground mb-4">Blog post not found</p>
-            <Button onClick={() => navigate("/Babykutty/")}>
+            <Button onClick={() => navigate("/")}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
@@ -56,13 +55,12 @@ export default function BlogDetail() {
     );
   }
 
-
   return (
-    <div className="min-h-screen bg-background">
+    <article className="min-h-screen bg-background selection:bg-accent/30">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12">
         <Button
           variant="ghost"
-          onClick={() => navigate("/Babykutty/")}
+          onClick={() => navigate("/")}
           className="mb-6"
           data-testid="button-back"
         >

@@ -53,7 +53,7 @@ export default function Blog() {
   }, [blogPosts.length]);
 
   const handleReadMore = (blogId: string) => {
-    navigate(`/Babykutty/blog/${blogId}`);
+    navigate(`/blog/${blogId}`);
   };
 
   return (
@@ -125,7 +125,7 @@ export default function Blog() {
                       <span className="text-accent">{post.readTime}</span>
                     </div>
                     <button
-                      onClick={() => handleReadMore(post._id)}
+                      onClick={() => navigate(`/blog/${post._id}`)}
                       className="flex items-center gap-2 text-accent hover:gap-3 transition-all font-semibold text-sm group/btn"
                       data-testid={`button-blog-read-${index}`}
                     >
@@ -142,7 +142,7 @@ export default function Blog() {
         {!loading && blogPosts.length > 0 && (
           <div className="text-center mt-12">
             <Button
-              onClick={() => navigate("/Babykutty/blogs")}
+              onClick={() => navigate("/blogs")}
               size="lg"
               variant="outline"
               className="hover:bg-accent hover:text-accent-foreground"

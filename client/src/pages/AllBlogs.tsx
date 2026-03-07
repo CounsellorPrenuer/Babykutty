@@ -49,7 +49,7 @@ export default function AllBlogs() {
         <div className="flex items-center justify-between mb-8">
           <Button
             variant="ghost"
-            onClick={() => navigate("/Babykutty/")}
+            onClick={() => navigate("/")}
             data-testid="button-back-home"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -117,7 +117,7 @@ export default function AllBlogs() {
                     <span className="text-accent">{blog.readTime}</span>
                   </div>
                   <button
-                    onClick={() => navigate(`/Babykutty/blog/${blog._id}`)}
+                    onClick={() => navigate(`/blog/${blog._id}`)}
                     className="flex items-center gap-2 text-accent hover:gap-3 transition-all font-semibold text-sm group/btn"
                     data-testid={`button-read-${blog._id}`}
                   >
