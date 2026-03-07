@@ -46,7 +46,7 @@ export default function BlogDetail() {
         <Card className="max-w-md">
           <CardContent className="pt-6 text-center">
             <p className="text-xl font-semibold text-foreground mb-4">Blog post not found</p>
-            <Button onClick={() => navigate("/")}>
+            <Button onClick={() => navigate("/Babykutty/")}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
@@ -62,7 +62,7 @@ export default function BlogDetail() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12">
         <Button
           variant="ghost"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/Babykutty/")}
           className="mb-6"
           data-testid="button-back"
         >

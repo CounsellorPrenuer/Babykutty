@@ -49,7 +49,7 @@ export default function AllBlogs() {
         <div className="flex items-center justify-between mb-8">
           <Button
             variant="ghost"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/Babykutty/")}
             data-testid="button-back-home"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
